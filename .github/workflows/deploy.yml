@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]  # 当 main 分支发生更新时触发部署
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # 使用与项目兼容的 Node.js 版本
+
+      - name: Install dependencies
+        run: npm install  # 如果使用 yarn，请替换为 `yarn install`
+
+      - name: Build project
+        run: npm run build  # 确保你有 `build` 脚本，如 `vite build` 或 `vue build`
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist  # 构建输出目录，通常为 Vue 项目的 dist 目录
